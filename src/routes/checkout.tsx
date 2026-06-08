@@ -70,7 +70,18 @@ function CheckoutPage() {
         }).catch(() => {}); // silent fail
       }
 
-      // 4. Send owner email alert (silent — no popup)
+      // 4. Send customer WhatsApp confirmation from business account
+      await supabase.functions.invoke("whatsapp-notify", {
+        body: {
+          customerPhone: form.phone,
+          customerName: form.name,
+          orderNumber: order.order_number,
+          items,
+          trackUrl,
+        },
+      }).catch(() => {}); // silent fail
+
+      // 5. Send owner email alert (silent — no popup)
       await supabase.functions.invoke("notify-owner", {
         body: {
           orderNumber: order.order_number,
