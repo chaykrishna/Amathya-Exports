@@ -18,20 +18,18 @@ type Product = {
   in_stock: boolean;
 };
 
-// High quality Unsplash spice images
 const SPICE_IMAGES: Record<string, string> = {
-  "Cardamom": "https://images.unsplash.com/photo-1638177188759-5eb7d2a8aea9?w=400&q=80",
-  "Saffron": "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400&q=80",
-  "Black Pepper": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
-  "Cinnamon": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&q=80",
-  "Cloves": "https://images.unsplash.com/photo-1627485937980-221c88ac04f9?w=400&q=80",
-  "Turmeric": "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80",
-  "Cumin": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&q=80",
-  "Coriander": "https://images.unsplash.com/photo-1599909631253-2ae8e5a3c39d?w=400&q=80",
+  "Cardamom":     "https://images.unsplash.com/photo-1638177188759-5eb7d2a8aea9?w=400&q=80",
+  "Saffron":      "https://images.unsplash.com/photo-1469909491685-40c69e56e206?w=400&q=80",
+  "Black Pepper": "https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&q=80",
+  "Cinnamon":     "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400&q=80",
+  "Cloves":       "https://images.unsplash.com/photo-1552825898-a432e85f7d2f?w=400&q=80",
+  "Turmeric":     "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80",
+  "Cumin":        "https://images.unsplash.com/photo-1603903631918-a3e0b7b7c7b7?w=400&q=80",
+  "Coriander":    "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=400&q=80",
 };
 
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=400&q=80";
-
 function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

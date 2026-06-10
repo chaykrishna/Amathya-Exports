@@ -29,9 +29,9 @@ function CheckoutPage() {
     setLoading(true);
 
     try {
-      // 1. Save order to Supabase
-      const { data: order, error: orderErr } = await supabase
-        .from("orders")
+      // 1. Save order
+      const { data: order, error: orderErr } = await ((supabase as any)
+        .from("orders"))
         .insert({
           customer_name: form.name,
           customer_phone: form.phone,
@@ -46,7 +46,7 @@ function CheckoutPage() {
       if (orderErr || !order) throw orderErr ?? new Error("Failed to place order");
 
       // 2. Save order items
-      await supabase.from("order_items").insert(
+      await ((supabase as any).from("order_items")).insert(
         items.map((i) => ({
           order_id: order.id,
           product_name: i.name,
@@ -57,7 +57,7 @@ function CheckoutPage() {
 
       const trackUrl = `${window.location.origin}/order/${order.order_number}`;
 
-      // 3. Send customer confirmation email (silent — no popup)
+      // 3. Send confirmation email (only if email provided)
       if (form.email) {
         await supabase.functions.invoke("send-order-email", {
           body: {
@@ -67,21 +67,23 @@ function CheckoutPage() {
             items,
             trackUrl,
           },
-        }).catch(() => {}); // silent fail
+        }).catch(() => {});
       }
 
-      // 4. Send customer WhatsApp confirmation from business account
-      await supabase.functions.invoke("whatsapp-notify", {
-        body: {
+      
+      // 4. Send WhatsApp message via Zapier → friend's WhatsApp Business
+      await fetch("https://hooks.zapier.com/hooks/catch/27878106/43okp9t/", {
+        method: "POST",
+        body: JSON.stringify({
           customerPhone: form.phone,
           customerName: form.name,
           orderNumber: order.order_number,
-          items,
+          items: items.map((i) => `${i.name} — ${i.quantity} ${i.unit}`).join(", "),
           trackUrl,
-        },
-      }).catch(() => {}); // silent fail
+        }),
+      }).catch(() => {});
 
-      // 5. Send owner email alert (silent — no popup)
+      // 5. Notify owner
       await supabase.functions.invoke("notify-owner", {
         body: {
           orderNumber: order.order_number,
@@ -92,7 +94,7 @@ function CheckoutPage() {
           items,
           trackUrl,
         },
-      }).catch(() => {}); // silent fail
+      }).catch(() => {});
 
       clearCart();
       navigate({ to: "/order/$orderNumber", params: { orderNumber: order.order_number } });

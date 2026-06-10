@@ -17,7 +17,6 @@ type Order = {
   customer_phone: string;
   customer_address: string;
   status: string;
-  total_amount: number;
   notes: string | null;
   created_at: string;
 };
@@ -27,8 +26,6 @@ type OrderItem = {
   product_name: string;
   quantity: number;
   unit: string;
-  price_per_unit: number;
-  total_price: number;
 };
 
 const STATUS_STEPS = [
@@ -117,26 +114,30 @@ function OrderPage() {
           </span>
           <h1 className="mt-2 text-3xl font-medium tracking-tight">{order?.order_number}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Placed on {new Date(order!.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+            Placed on {new Date(order!.created_at).toLocaleDateString("en-IN", {
+              day: "numeric", month: "long", year: "numeric",
+            })}
           </p>
         </div>
 
         {/* Status tracker */}
         <div className="mb-10 rounded-2xl border border-border bg-background p-6">
           <div className="relative flex items-start justify-between">
-            {/* Progress line */}
             <div className="absolute left-0 right-0 top-5 h-px bg-border" />
             <div
               className="absolute left-0 top-5 h-px bg-foreground transition-all"
               style={{ width: `${(currentStep / (STATUS_STEPS.length - 1)) * 100}%` }}
             />
-
             {STATUS_STEPS.map((step, i) => {
               const Icon = step.icon;
               const done = i <= currentStep;
               return (
                 <div key={step.key} className="relative flex flex-col items-center gap-2 text-center">
-                  <div className={`relative z-10 flex size-10 items-center justify-center rounded-full border-2 transition-colors ${done ? "border-foreground bg-foreground text-background" : "border-border bg-background text-muted-foreground"}`}>
+                  <div className={`relative z-10 flex size-10 items-center justify-center rounded-full border-2 transition-colors ${
+                    done
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border bg-background text-muted-foreground"
+                  }`}>
                     <Icon className="size-4" />
                   </div>
                   <p className={`text-[11px] font-medium ${done ? "text-foreground" : "text-muted-foreground"}`}>
@@ -152,7 +153,9 @@ function OrderPage() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {/* Items */}
           <div className="rounded-2xl border border-border p-6">
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Items Ordered</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Items Ordered
+            </h3>
             <div className="space-y-3">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center justify-between text-sm">
@@ -160,16 +163,17 @@ function OrderPage() {
                   <span className="text-muted-foreground">{item.quantity} {item.unit}</span>
                 </div>
               ))}
-              <div className="border-t border-border pt-3 flex items-center justify-between font-medium">
-                <span>Total</span>
-                <span>₹{order!.total_amount.toLocaleString()}</span>
-              </div>
+            </div>
+            <div className="mt-4 rounded-xl bg-muted/40 p-3 text-[12px] text-muted-foreground">
+              💬 Pricing will be confirmed by our team shortly.
             </div>
           </div>
 
           {/* Customer details */}
           <div className="rounded-2xl border border-border p-6">
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Delivery Details</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Delivery Details
+            </h3>
             <div className="space-y-3 text-sm">
               <div>
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Name</p>
@@ -192,8 +196,8 @@ function OrderPage() {
         {/* WhatsApp CTA */}
         <div className="mt-6 rounded-2xl border border-border p-6 text-center">
           <p className="text-sm text-muted-foreground mb-3">Have questions about your order?</p>
-          <a
-            href={`https://wa.me/91XXXXXXXXXX?text=Hi, I have a question about my order ${order?.order_number}`}
+          
+           <a href={`https://wa.me/${import.meta.env.VITE_BUSINESS_PHONE ?? "919999999999"}?text=Hi, I have a question about my order ${order?.order_number}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"

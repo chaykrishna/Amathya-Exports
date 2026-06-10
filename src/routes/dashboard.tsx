@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Package, Clock, CheckCircle, Truck, MapPin, RefreshCw, Bell } from "lucide-react";
+import { Package, Clock, CheckCircle, Truck, MapPin, RefreshCw, Bell, ChevronLeft, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
@@ -36,13 +36,20 @@ const STATUS_ICONS: Record<string, React.ElementType> = {
 };
 
 export default function OwnerDashboard() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [updating, setUpdating] = useState<string | null>(null);
   const [newOrderIds, setNewOrderIds] = useState<Set<string>>(new Set());
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const isFirstLoad = useRef(true);
+
+  // Auth guard — redirect to login if not authenticated
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) navigate({ to: "/admin-login" });
+    });
+  }, []);
 
   const loadOrders = async () => {
     const { data } = await supabase
@@ -56,17 +63,13 @@ export default function OwnerDashboard() {
   useEffect(() => {
     loadOrders();
 
-    // Realtime subscription — new orders appear instantly
     const channel = supabase
       .channel("orders-realtime")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
         async (payload) => {
-          // Skip notification on first load
           if (isFirstLoad.current) return;
-
-          // Fetch full order with items
           const { data } = await supabase
             .from("orders")
             .select("*, order_items(product_name, quantity, unit)")
@@ -80,7 +83,6 @@ export default function OwnerDashboard() {
               duration: 6000,
               description: `Order ${(data as Order).order_number} just came in`,
             });
-            // Remove highlight after 10s
             setTimeout(() => {
               setNewOrderIds((prev) => {
                 const next = new Set(prev);
@@ -116,6 +118,11 @@ export default function OwnerDashboard() {
     setUpdating(null);
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/admin-login" });
+  };
+
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
   const counts = STATUS_OPTIONS.reduce((acc, s) => {
     acc[s] = orders.filter((o) => o.status === s).length;
@@ -128,6 +135,14 @@ export default function OwnerDashboard() {
       <div className="border-b border-[#e8e0d5] bg-white px-6 py-4 sticky top-0 z-10">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-3">
+            {/* Back button */}
+            <button
+              onClick={() => navigate({ to: "/" })}
+              className="flex items-center gap-1 rounded-xl border border-[#e8e0d5] px-3 py-2 text-xs font-medium text-[#999] hover:bg-[#faf9f7] hover:text-[#1a1a1a] transition-colors"
+            >
+              <ChevronLeft className="size-3.5" /> Back
+            </button>
+
             <div className="flex size-9 items-center justify-center rounded-xl bg-[#1a1a1a]">
               <Package className="size-4 text-white" />
             </div>
@@ -139,12 +154,21 @@ export default function OwnerDashboard() {
               </div>
             </div>
           </div>
-          <button
-            onClick={loadOrders}
-            className="flex items-center gap-2 rounded-xl border border-[#e8e0d5] bg-white px-3 py-2 text-xs font-medium hover:bg-[#faf9f7] transition-colors"
-          >
-            <RefreshCw className="size-3.5" /> Refresh
-          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={loadOrders}
+              className="flex items-center gap-2 rounded-xl border border-[#e8e0d5] bg-white px-3 py-2 text-xs font-medium hover:bg-[#faf9f7] transition-colors"
+            >
+              <RefreshCw className="size-3.5" /> Refresh
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 rounded-xl border border-[#e8e0d5] bg-white px-3 py-2 text-xs font-medium text-red-500 hover:bg-red-50 hover:border-red-200 transition-colors"
+            >
+              <LogOut className="size-3.5" /> Sign Out
+            </button>
+          </div>
         </div>
       </div>
 
@@ -233,14 +257,14 @@ export default function OwnerDashboard() {
                         <div>
                           <p className="text-[10px] uppercase tracking-wider text-[#999]">Customer</p>
                           <p className="mt-0.5 text-sm font-medium">{order.customer_name}</p>
-                          <a
-                            href={`https://wa.me/${order.customer_phone.replace(/[^0-9]/g, "")}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-green-600 hover:underline"
-                          >
-                            📱 {order.customer_phone}
-                          </a>
+                          
+                         <a href={`https://wa.me/${order.customer_phone.replace(/[^0-9]/g, "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-green-600 hover:underline"
+          >
+            📱 {order.customer_phone}
+          </a>
                         </div>
                         <div>
                           <p className="text-[10px] uppercase tracking-wider text-[#999]">Address</p>
@@ -273,7 +297,8 @@ export default function OwnerDashboard() {
                           <option key={s} value={s} className="capitalize">{s}</option>
                         ))}
                       </select>
-                      <a
+                      
+                       <a
                         href={`/order/${order.order_number}`}
                         target="_blank"
                         rel="noopener noreferrer"
