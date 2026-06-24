@@ -1,10 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, useRef } from "react";
+import { createFileRoute, useNavigate, useRouteContext } from "@tanstack/react-router";
+import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { Package, Clock, CheckCircle, Truck, MapPin, RefreshCw, Bell, ChevronLeft, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
+  beforeLoad: requireSupabaseAuth,
   component: OwnerDashboard,
 });
 
@@ -44,13 +46,7 @@ export default function OwnerDashboard() {
   const [newOrderIds, setNewOrderIds] = useState<Set<string>>(new Set());
   const isFirstLoad = useRef(true);
 
-  // Auth guard — redirect to login if not authenticated
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) navigate({ to: "/admin-login" });
-    });
-  }, []);
-
+  // Auth is handled by requireSupabaseAuth middleware — no client-side check needed
   const loadOrders = async () => {
     const { data } = await supabase
       .from("orders")

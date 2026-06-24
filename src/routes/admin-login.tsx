@@ -102,6 +102,17 @@ function AdminLogin() {
               </div>
             )}
 
+            <div className="flex items-center justify-end text-[11px]">
+              <a
+                href="https://eugfygvspiagziterefi.supabase.co/auth/v1/forgot-password"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#c8a96e] hover:underline"
+              >
+                Forgot password?
+              </a>
+            </div>
+
             <button
               type="submit"
               disabled={loading || !email || !password}
