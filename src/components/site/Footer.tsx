@@ -16,23 +16,6 @@ export function Footer() {
               The operating system for global trade. Hyderabad · Singapore · Rotterdam · New York.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-12 sm:grid-cols-4">
-            {[
-              { h: "Solutions", l: ["Tracking", "Customs", "Quote Engine", "Compliance"] },
-              { h: "Network", l: ["Ports", "Warehouses", "Routes", "Partners"] },
-              { h: "Company", l: ["About", "Careers", "Press", "Contact"] },
-              { h: "Connect", l: ["WhatsApp", "Logistics Desk", "Status", "Support"] },
-            ].map((col) => (
-              <div key={col.h}>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{col.h}</p>
-                <ul className="mt-4 space-y-2 text-sm">
-                  {col.l.map((item) => (
-                    <li key={item}><a href="#" className="hover:text-foreground">{item}</a></li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
         </div>
         <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-border pt-8 text-xs text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} Amathya Exports Global Logistics. All systems nominal.</p>
