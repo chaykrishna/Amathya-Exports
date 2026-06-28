@@ -24,13 +24,13 @@ function AdminLogin() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      setError("Invalid credentials. Access denied.");
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-      setLoading(false);
-      return;
-    }
-
+  console.error(error);
+  setError(error.message);
+  setShake(true);
+  setTimeout(() => setShake(false), 500);
+  setLoading(false);
+  return;
+}
     navigate({ to: "/dashboard" });
   };
 
@@ -101,17 +101,6 @@ function AdminLogin() {
                 <p className="text-[12px] font-medium text-red-600">{error}</p>
               </div>
             )}
-
-            <div className="flex items-center justify-end text-[11px]">
-              <a
-                href="https://eugfygvspiagziterefi.supabase.co/auth/v1/forgot-password"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#c8a96e] hover:underline"
-              >
-                Forgot password?
-              </a>
-            </div>
 
             <button
               type="submit"

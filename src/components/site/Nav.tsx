@@ -18,10 +18,29 @@ export function Nav() {
             </span>
           </Link>
           <div className="hidden gap-8 text-[13px] font-medium text-muted-foreground md:flex">
-            <a href="#solutions" className="transition-colors hover:text-foreground">Solutions</a>
-            <a href="#compliance" className="transition-colors hover:text-foreground">Compliance</a>
-            <a href="/shop" className="transition-colors hover:text-foreground">Shop</a>
-          </div>
+  <Link
+    to="/"
+    hash="solutions"
+    className="transition-colors hover:text-foreground"
+  >
+    Solutions
+  </Link>
+
+  <Link
+    to="/"
+    hash="compliance"
+    className="transition-colors hover:text-foreground"
+  >
+    Compliance
+  </Link>
+
+  <Link
+    to="/shop"
+    className="transition-colors hover:text-foreground"
+  >
+    Shop
+  </Link>
+</div>
         </div>
 
           {/* Premium Admin Button → goes to login page */}

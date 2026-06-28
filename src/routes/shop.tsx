@@ -38,16 +38,26 @@ function ShopPage() {
   const { items, addItem, removeItem, updateQuantity } = useCart();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    supabase
+useEffect(() => {
+  const loadProducts = async () => {
+    const { data, error } = await supabase
       .from("products")
       .select("*")
-      .eq("in_stock", true)
-      .then(({ data }) => {
-        setProducts(data ?? []);
-        setLoading(false);
-      });
-  }, []);
+      .eq("in_stock", true);
+
+    console.log("Products:", data);
+    console.log("Error:", error);
+
+    if (error) {
+      console.error(error);
+    }
+
+    setProducts(data ?? []);
+    setLoading(false);
+  };
+
+  loadProducts();
+}, []);
 
   const cartCount = items.reduce((s, i) => s + i.quantity, 0);
 
