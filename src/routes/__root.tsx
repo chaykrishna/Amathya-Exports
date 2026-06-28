@@ -71,104 +71,87 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
-  meta: [
-    { charSet: "utf-8" },
-    { name: "viewport", content: "width=device-width, initial-scale=1" },
-
-    {
-      title: "Amathya Exports | Premium Indian Spice Exporters",
-    },
-
-    {
-      name: "description",
-      content:
-        "Amathya Exports supplies premium Indian spices sourced directly from trusted farms. Export-quality products with reliable global trade and shipment tracking.",
-    },
-
-    {
-      name: "keywords",
-      content:
-        "Indian spices, spice exporters, cardamom, black pepper, turmeric, cumin, coriander, cinnamon, cloves, saffron, export, Kerala spices",
-    },
-
-    {
-      name: "author",
-      content: "Amathya Exports",
-    },
-
-    {
-      property: "og:title",
-      content: "Amathya Exports | Premium Indian Spice Exporters",
-    },
-
-    {
-      property: "og:description",
-      content:
-        "Premium Indian spices sourced directly from trusted farms. Trusted export partner for global buyers.",
-    },
-
-    {
-      property: "og:type",
-      content: "website",
-    },
-
-    {
-      property: "og:site_name",
-      content: "Amathya Exports",
-    },
-
-    {
-      name: "twitter:card",
-      content: "summary_large_image",
-    },
-
-    {
-      name: "twitter:title",
-      content: "Amathya Exports | Premium Indian Spice Exporters",
-    },
-
-    {
-      name: "twitter:description",
-      content:
-        "Premium Indian spices sourced directly from trusted farms. Trusted export partner for global buyers.",
-    },
-  ],
-
-  links: [
-    {
-      rel: "stylesheet",
-      href: appCss,
-    },
-
-    {
-      rel: "icon",
-      type: "image/png",
-      href: "public/favicon.png",
-    },
-
-    {
-      rel: "apple-touch-icon",
-      href: "public/favicon.png",
-    },
-
-    {
-      rel: "preconnect",
-      href: "https://fonts.googleapis.com",
-    },
-
-    {
-      rel: "preconnect",
-      href: "https://fonts.gstatic.com",
-      crossOrigin: "anonymous",
-    },
-
-    {
-      rel: "stylesheet",
-      href:
-        "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Marcellus&family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
-    },
-  ],
-}),
+    meta: [
+      { charSet: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      {
+        title: "Amathya Exports | Premium Indian Spice Exporters",
+      },
+      {
+        name: "description",
+        content:
+          "Amathya Exports supplies premium Indian spices sourced directly from trusted farms. Export-quality products with reliable global trade and shipment tracking.",
+      },
+      {
+        name: "keywords",
+        content:
+          "Indian spices, spice exporters, cardamom, black pepper, turmeric, cumin, coriander, cinnamon, cloves, saffron, export, Kerala spices",
+      },
+      {
+        name: "author",
+        content: "Amathya Exports",
+      },
+      {
+        property: "og:title",
+        content: "Amathya Exports | Premium Indian Spice Exporters",
+      },
+      {
+        property: "og:description",
+        content:
+          "Premium Indian spices sourced directly from trusted farms. Trusted export partner for global buyers.",
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "Amathya Exports",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:title",
+        content: "Amathya Exports | Premium Indian Spice Exporters",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Premium Indian spices sourced directly from trusted farms. Trusted export partner for global buyers.",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "/favicon.png?v=2",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "/favicon.png",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.googleapis.com",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href:
+          "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Marcellus&family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+  }),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
