@@ -197,7 +197,7 @@ function OrderPage() {
         <div className="mt-6 rounded-2xl border border-border p-6 text-center">
           <p className="text-sm text-muted-foreground mb-3">Have questions about your order?</p>
           
-           <a href={`https://wa.me/${import.meta.env.VITE_BUSINESS_PHONE ?? "919999999999"}?text=Hi, I have a question about my order ${order?.order_number}`}
+           <a href={`https://wa.me/${import.meta.env.VITE_BUSINESS_PHONE ?? "+917207933925"}?text=Hi, I have a question about my order ${order?.order_number}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"

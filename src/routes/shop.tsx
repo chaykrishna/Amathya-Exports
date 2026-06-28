@@ -15,19 +15,10 @@ type Product = {
   name: string;
   description: string | null;
   unit: string;
+  image_url: string | null;
   in_stock: boolean;
 };
 
-const SPICE_IMAGES: Record<string, string> = {
-  "Cardamom":     "https://images.unsplash.com/photo-1638177188759-5eb7d2a8aea9?w=400&q=80",
-  "Saffron":      "https://images.unsplash.com/photo-1469909491685-40c69e56e206?w=400&q=80",
-  "Black Pepper": "https://images.unsplash.com/photo-1548407260-da850faa41e3?w=400&q=80",
-  "Cinnamon":     "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=400&q=80",
-  "Cloves":       "https://images.unsplash.com/photo-1552825898-a432e85f7d2f?w=400&q=80",
-  "Turmeric":     "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=400&q=80",
-  "Cumin":        "https://images.unsplash.com/photo-1603903631918-a3e0b7b7c7b7?w=400&q=80",
-  "Coriander":    "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=400&q=80",
-};
 
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=400&q=80";
 function ShopPage() {
@@ -118,8 +109,7 @@ useEffect(() => {
             {products.map((p) => {
               const inCart = items.find((i) => i.productId === p.id);
               const added = justAdded === p.id;
-              const img = SPICE_IMAGES[p.name] || FALLBACK_IMAGE;
-
+              const img = p.image_url || FALLBACK_IMAGE;
               return (
                 <div
                   key={p.id}
@@ -219,10 +209,16 @@ useEffect(() => {
                     <div key={item.productId} className="flex items-center gap-4 rounded-2xl border border-[#f0ece6] bg-background p-4">
                       <div className="size-12 overflow-hidden rounded-xl bg-secondary">
                         <img
-                          src={SPICE_IMAGES[item.name] || FALLBACK_IMAGE}
-                          alt={item.name}
-                          className="size-full object-cover"
-                        />
+  src={
+    products.find((p) => p.id === item.productId)?.image_url ||
+    FALLBACK_IMAGE
+  }
+  alt={item.name}
+  className="size-full object-cover"
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
+  }}
+/>
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">{item.name}</p>
