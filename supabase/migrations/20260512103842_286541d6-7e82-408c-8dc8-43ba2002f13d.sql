@@ -1,6 +1,6 @@
 
 -- PROFILES
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
   company text,
@@ -20,11 +20,12 @@ begin
   values (new.id, coalesce(new.raw_user_meta_data->>'display_name', split_part(new.email,'@',1)));
   return new;
 end; $$;
-create trigger on_auth_user_created after insert on auth.users
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
 for each row execute function public.handle_new_user();
 
 -- SHIPMENTS
-create table public.shipments (
+create table if not exists public.shipments (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   reference text not null,
@@ -44,7 +45,7 @@ create policy "own shipments all" on public.shipments for all using (auth.uid() 
 create index on public.shipments (user_id, created_at desc);
 
 -- STOCK
-create table public.stock_items (
+create table if not exists public.stock_items (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   sku text not null,
@@ -58,7 +59,7 @@ alter table public.stock_items enable row level security;
 create policy "own stock all" on public.stock_items for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- NOTIFICATIONS
-create table public.notifications (
+create table if not exists public.notifications (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   title text not null,
@@ -75,5 +76,3 @@ create index on public.notifications (user_id, created_at desc);
 
 -- realtime
 alter publication supabase_realtime add table public.shipments;
-alter publication supabase_realtime add table public.notifications;
-alter publication supabase_realtime add table public.stock_items;
