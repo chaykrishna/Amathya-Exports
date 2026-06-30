@@ -41,17 +41,7 @@ export function Nav() {
     Shop
   </Link>
 </div>
-        </div>
-
-          {/* Premium Admin Button → goes to login page */}
-          <Link
-            to="/admin-login"
-            className="group relative flex items-center gap-2 rounded-xl border border-[#c8a96e]/40 bg-[#fdf8f0] px-3.5 py-2 text-[12px] font-semibold text-[#a07840] transition-all duration-200 hover:border-[#c8a96e] hover:bg-[#fdf3e3] hover:shadow-[0_0_0_3px_rgba(200,169,110,0.12)]"
-          >
-            <Lock className="size-3.5 transition-transform duration-200 group-hover:scale-110" />
-            Admin
-            <span className="absolute -right-1 -top-1 size-2 rounded-full bg-[#c8a96e] opacity-80 animate-pulse" />
-          </Link>
+        </div>        
         </div>
     </nav>
   );

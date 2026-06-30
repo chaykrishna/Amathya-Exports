@@ -42,32 +42,58 @@ function OrderPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  useEffect(() => {
-    async function load() {
-      const { data: orderData } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("order_number", orderNumber)
-        .single();
+useEffect(() => {
+  let channel: ReturnType<typeof supabase.channel>;
 
-      if (!orderData) {
-        setNotFound(true);
-        setLoading(false);
-        return;
-      }
+  async function load() {
+    const { data: orderData } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("order_number", orderNumber)
+      .single();
 
-      setOrder(orderData as Order);
-
-      const { data: itemsData } = await supabase
-        .from("order_items")
-        .select("*")
-        .eq("order_id", orderData.id);
-
-      setItems((itemsData as OrderItem[]) ?? []);
+    if (!orderData) {
+      setNotFound(true);
       setLoading(false);
+      return;
     }
-    load();
-  }, [orderNumber]);
+
+    setOrder(orderData as Order);
+
+    const { data: itemsData } = await supabase
+      .from("order_items")
+      .select("*")
+      .eq("order_id", orderData.id);
+
+    setItems((itemsData as OrderItem[]) ?? []);
+    setLoading(false);
+
+    // Realtime subscription
+    channel = supabase
+      .channel(`order-${orderData.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders",
+          filter: `id=eq.${orderData.id}`,
+        },
+        (payload) => {
+          setOrder(payload.new as Order);
+        }
+      )
+      .subscribe();
+  }
+
+  load();
+
+  return () => {
+    if (channel) {
+      supabase.removeChannel(channel);
+    }
+  };
+}, [orderNumber]);
 
   const currentStep = STATUS_STEPS.findIndex((s) => s.key === order?.status);
 
